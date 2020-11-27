@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="this is Activity1"
+        android:textColor="#66aa66"
+        android:textSize="20sp"/>
+
+    <Button
+        android:id="@+id/button1_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="create Activity1" />
+
+    <Button
+        android:id="@+id/button1_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="create Activity2" />
+
+    <Button
+        android:id="@+id/button1_3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="create Activity3" />
+
+</LinearLayout>
