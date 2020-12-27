@@ -9,11 +9,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".lauchmode.Activity3"></activity>
-        <activity android:name=".lauchmode.Activity2"
-            android:launchMode="singleInstance"/>
-        <activity android:name=".lauchmode.Activity1"
-            android:launchMode="standard"/>
+        <activity android:name=".lesson3.MyRecylerViewActivity"></activity>
+        <activity android:name=".demoActivity.DemoActivity" />
+        <activity android:name=".TestJavaActivity" />
+        <activity android:name=".lesson3.MyListViewActivity" />
+        <activity android:name=".lauchmode.Activity3" />
+        <activity
+            android:name=".lauchmode.Activity2"
+            android:launchMode="singleInstance" />
+        <activity
+            android:name=".lauchmode.Activity1"
+            android:launchMode="standard" />
         <activity
             android:name=".ThirdActivity"
             android:theme="@style/Theme.AppCompat.Dialog" />
@@ -21,6 +27,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

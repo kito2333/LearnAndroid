@@ -3,6 +3,7 @@ package com.example.activitylifetime.lauchmode
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.activitylifetime.R
 import kotlinx.android.synthetic.main.activity_1.*
@@ -13,10 +14,6 @@ class Activity1 : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         Log.i(tag, "$this onCreate, task id is $taskId")
         setContentView(R.layout.activity_1)
-        button1_1.setOnClickListener {
-            val intent = Intent(this, Activity1::class.java)
-            startActivity(intent)
-        }
         button1_2.setOnClickListener {
             val intent = Intent(this, Activity2::class.java)
             startActivity(intent)
@@ -24,6 +21,19 @@ class Activity1 : AppCompatActivity() {
         button1_3.setOnClickListener {
             val intent = Intent(this, Activity3::class.java)
             startActivity(intent)
+        }
+        button1_1.setOnClickListener(object: MyOnClickListener() {
+            override fun onClick(v: View?) {
+                super.onClick(v)
+                val intent = Intent(this@Activity1, Activity1::class.java)
+                startActivity(intent)
+            }
+        })
+    }
+
+    open class MyOnClickListener: View.OnClickListener {
+        override fun onClick(v: View?) {
+            Log.i("tag", " jiayou!")
         }
     }
 

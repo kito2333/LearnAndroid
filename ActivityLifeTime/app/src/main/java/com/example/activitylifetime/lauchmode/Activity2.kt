@@ -11,7 +11,7 @@ class Activity2 : AppCompatActivity() {
     private val tag:String = "Activity2"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.i(tag, "$this onCreate, task id is $taskId")
+        Log.i(tag, "$this onCreate, task id is $taskId, process id is ${android.os.Process.myPid()}")
         setContentView(R.layout.activity_2)
         button2_1.setOnClickListener {
             val intent = Intent(this, Activity1::class.java)
