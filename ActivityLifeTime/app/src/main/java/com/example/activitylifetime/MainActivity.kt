@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import com.example.activitylifetime.lauchmode.Activity1
+import com.example.activitylifetime.lesson3.Lesson3FragmentActivity
 import com.example.activitylifetime.lesson3.MyListViewActivity
 import com.example.activitylifetime.lesson3.MyRecylerViewActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,6 +38,10 @@ class MainActivity : AppCompatActivity() {
         }
         button6.setOnClickListener {
             val intent = Intent(this, MyRecylerViewActivity::class.java)
+            startActivity(intent)
+        }
+        button7.setOnClickListener {
+            val intent = Intent(this, Lesson3FragmentActivity::class.java)
             startActivity(intent)
         }
     }
