@@ -8,6 +8,7 @@ import com.example.activitylifetime.lauchmode.Activity1
 import com.example.activitylifetime.lesson3.Lesson3FragmentActivity
 import com.example.activitylifetime.lesson3.MyListViewActivity
 import com.example.activitylifetime.lesson3.MyRecylerViewActivity
+import com.example.activitylifetime.lesson4.TestPermissionActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -42,6 +43,10 @@ class MainActivity : AppCompatActivity() {
         }
         button7.setOnClickListener {
             val intent = Intent(this, Lesson3FragmentActivity::class.java)
+            startActivity(intent)
+        }
+        button8.setOnClickListener {
+            val intent = Intent(this, TestPermissionActivity::class.java)
             startActivity(intent)
         }
     }

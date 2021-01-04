@@ -50,4 +50,12 @@
         android:textAllCaps="false"
         android:text="Test Fragment"
         android:id="@+id/button7"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Test Permission"
+        android:id="@+id/button8"/>
+
 </LinearLayout>
