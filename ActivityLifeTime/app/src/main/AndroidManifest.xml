@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.activitylifetime">
 
-   <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".lesson4.TestPermissionActivity"></activity>
+        <provider
+            android:name=".lesson4.MyContentProvider"
+            android:authorities="com.example.provider"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".lesson4.TestPermissionActivity" />
         <activity android:name=".lesson3.Lesson3FragmentActivity" />
         <activity android:name=".lesson3.MyRecylerViewActivity" />
         <activity android:name=".demoActivity.DemoActivity" />
