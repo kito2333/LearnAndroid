@@ -9,6 +9,7 @@ import com.example.activitylifetime.lesson3.Lesson3FragmentActivity
 import com.example.activitylifetime.lesson3.MyListViewActivity
 import com.example.activitylifetime.lesson3.MyRecylerViewActivity
 import com.example.activitylifetime.lesson4.TestPermissionActivity
+import com.example.activitylifetime.lesson8.TestServiceActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -48,6 +49,10 @@ class MainActivity : AppCompatActivity() {
         button8.setOnClickListener {
             val intent = Intent(this, TestPermissionActivity::class.java)
             startActivity(intent)
+        }
+        button9.setOnClickListener {
+            val intent = Intent(this, TestServiceActivity::class.java)
+            startActivity(intent);
         }
     }
 
