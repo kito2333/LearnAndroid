@@ -17,13 +17,13 @@ fun main() {
     Singleton.goGoGo()
     Singleton.setXXX(5)
     Singleton.goGoGo()
-    val list = listOf('1', "2", " 3")
-    val map : Map<String, Int> = mapOf<String, Int>("hei" to 2, "pingguo" to 3)
-    val maxLength = map.maxBy { it.key.length }
-
-    val newMap = map.filter { it.key.length <= 3 }
-    if (maxLength != null) {
-        println(maxLength.value)
-    }
-    println(newMap)
+//    val list = listOf('1', "2", " 3")
+//    val map : Map<String, Int> = mapOf<String, Int>("hei" to 2, "pingguo" to 3)
+//    val maxLength = map.maxBy { it.key.length }
+//
+//    val newMap = map.filter { it.key.length <= 3 }
+//    if (maxLength != null) {
+//        println(maxLength.value)
+//    }
+//    println(newMap)
 }
