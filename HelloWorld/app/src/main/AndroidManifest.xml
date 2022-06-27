@@ -14,7 +14,8 @@
 
         <activity
             android:name=".ui.WebViewActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:theme="@style/AppFullTheme" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
