@@ -8,6 +8,8 @@ import android.view.View
 import android.view.WindowManager
 import android.webkit.WebViewClient
 import com.example.helloworld.R
+import com.example.helloworld.web.JsonDataGsonParser
+import com.example.helloworld.web.JsonDataJSONObjectParser
 import kotlinx.android.synthetic.main.activity_web_view.*
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
@@ -21,6 +23,9 @@ import kotlin.concurrent.thread
 import kotlin.text.StringBuilder
 
 class WebViewActivity : AppCompatActivity() {
+    companion object {
+        const val TAG = "WebViewActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +57,7 @@ class WebViewActivity : AppCompatActivity() {
                     readTimeout = 8000
                 }
                 val input = connection.inputStream
-// 对于输入流进行读取
+                // 对于输入流进行读取
                 val reader = BufferedReader(InputStreamReader(input))
                 reader.use {
                     reader.forEachLine {
@@ -75,11 +80,11 @@ class WebViewActivity : AppCompatActivity() {
             try {
                 val client = OkHttpClient()
                 val request = Request.Builder()
-                    .url("https://www.baidu.com")
+                    .url("http://10.23.180.246/get_data.json")
                     .build()
                 val response = client.newCall(request).execute()
                 response.body?.string()?.let {
-                    showResponse(it)
+                    JsonDataGsonParser().parse(it)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

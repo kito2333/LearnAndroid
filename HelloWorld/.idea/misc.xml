@@ -8,6 +8,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_web_view.xml" value="0.38958333333333334" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.216" />
+        <entry key="app/src/main/res/xml/network_config.xml" value="0.4036458333333333" />
       </map>
     </option>
   </component>
