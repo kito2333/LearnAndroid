@@ -1,7 +1,6 @@
 package com.example.helloworld.ui
 
 import android.annotation.SuppressLint
-import android.graphics.Color
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -10,13 +9,26 @@ import android.view.WindowManager
 import android.webkit.WebViewClient
 import com.example.helloworld.R
 import kotlinx.android.synthetic.main.activity_web_view.*
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.lang.Exception
+import java.net.HttpURLConnection
+import java.net.URL
+import kotlin.concurrent.thread
+import kotlin.text.StringBuilder
 
 class WebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_web_view)
-        initWebView()
+//        initWebView()
+        sendRequestBtn.setOnClickListener {
+            mockOkHttpRequest()
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -25,6 +37,83 @@ class WebViewActivity : AppCompatActivity() {
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = WebViewClient()
         webView.loadUrl(url)
+        webView.visibility = View.VISIBLE
+    }
+
+    private fun mockHttpRequest() {
+        thread {
+            var connection: HttpURLConnection? = null
+            try {
+                val response = StringBuilder()
+                val url = URL("https://www.baidu.com")
+                connection = (url.openConnection() as HttpURLConnection).apply {
+                    requestMethod = "GET"
+                    connectTimeout = 8000
+                    readTimeout = 8000
+                }
+                val input = connection.inputStream
+// 对于输入流进行读取
+                val reader = BufferedReader(InputStreamReader(input))
+                reader.use {
+                    reader.forEachLine {
+                        response.append(it)
+                    }
+                }
+                showResponse(response.toString())
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            } finally {
+                connection?.disconnect()
+            }
+        }
+
+    }
+
+    // GET
+    private fun mockOkHttpRequest() {
+        thread {
+            try {
+                val client = OkHttpClient()
+                val request = Request.Builder()
+                    .url("https://www.baidu.com")
+                    .build()
+                val response = client.newCall(request).execute()
+                response.body?.string()?.let {
+                    showResponse(it)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    // POST
+    private fun mockOkHttpPostRequest() {
+        thread {
+            try {
+                val client = OkHttpClient()
+                val requestBody = FormBody.Builder()
+                    .add("username", "admin")
+                    .add("password", "123456")
+                    .build()
+                val request = Request.Builder()
+                    .url("https://www.baidu.com")
+                    .post(requestBody)
+                    .build()
+                val response = client.newCall(request).execute()
+                response.body?.string()?.let {
+                    showResponse(it)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun showResponse(resp: String) {
+        runOnUiThread {
+            responseText.text = resp
+        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
