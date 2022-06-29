@@ -19,6 +19,12 @@
         android:layout_height="wrap_content"
         android:text="Send Request" />
 
+    <Button
+        android:id="@+id/getAppDataBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get App Data" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

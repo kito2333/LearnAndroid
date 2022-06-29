@@ -4,16 +4,23 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.webkit.WebViewClient
 import com.example.helloworld.R
+import com.example.helloworld.web.App
+import com.example.helloworld.web.AppService
 import com.example.helloworld.web.JsonDataGsonParser
-import com.example.helloworld.web.JsonDataJSONObjectParser
 import kotlinx.android.synthetic.main.activity_web_view.*
 import okhttp3.FormBody
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.Exception
@@ -25,6 +32,7 @@ import kotlin.text.StringBuilder
 class WebViewActivity : AppCompatActivity() {
     companion object {
         const val TAG = "WebViewActivity"
+        const val BASE_URL = "http://10.23.180.246"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +41,30 @@ class WebViewActivity : AppCompatActivity() {
 //        initWebView()
         sendRequestBtn.setOnClickListener {
             mockOkHttpRequest()
+        }
+        getAppDataBtn.setOnClickListener {
+            val retrofit = Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+            val appService = retrofit.create(AppService::class.java)
+            appService.getAppData().enqueue(object : Callback<List<App>> {
+                override fun onResponse(call: Call<List<App>>, response: Response<List<App>>) {
+                    val list = response.body()
+                    if (list != null) {
+                        for (app in list) {
+                            Log.d(
+                                TAG,
+                                "id is ${app.id}, name is ${app.name}, version is ${app.version}"
+                            )
+                        }
+                    }
+                }
+
+                override fun onFailure(call: Call<List<App>>, t: Throwable) {
+                    t.printStackTrace()
+                }
+            })
         }
     }
 
