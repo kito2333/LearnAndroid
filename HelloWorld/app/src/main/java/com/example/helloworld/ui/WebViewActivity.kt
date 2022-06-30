@@ -11,6 +11,7 @@ import android.webkit.WebViewClient
 import com.example.helloworld.R
 import com.example.helloworld.web.App
 import com.example.helloworld.web.AppService
+import com.example.helloworld.web.HttpUtil
 import com.example.helloworld.web.JsonDataGsonParser
 import kotlinx.android.synthetic.main.activity_web_view.*
 import okhttp3.FormBody
@@ -43,11 +44,7 @@ class WebViewActivity : AppCompatActivity() {
             mockOkHttpRequest()
         }
         getAppDataBtn.setOnClickListener {
-            val retrofit = Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
-            val appService = retrofit.create(AppService::class.java)
+            val appService = HttpUtil.create<AppService>()
             appService.getAppData().enqueue(object : Callback<List<App>> {
                 override fun onResponse(call: Call<List<App>>, response: Response<List<App>>) {
                     val list = response.body()
