@@ -1,11 +1,30 @@
 package com.example.helloworld
 
-fun main () {
-    val a = 0
-    val b = "1223"
-    for ( i in 0..10) {
-        print(i)
+import kotlinx.coroutines.*
+
+fun main() {
+    GlobalScope.launch {
+        println("code run on coroutine scope")
     }
-    println("Hello World!")
+    runBlocking {
+        launch {
+            println("test 1")
+            delay(1500)
+            println("test 2")
+        }
+
+        launch {
+            println("test 3")
+            delay(1500)
+            println("test 4")
+        }
+    }
+}
+
+suspend fun printDot() = coroutineScope {
+    launch {
+        println(".")
+        delay(1000)
+    }
 }
 

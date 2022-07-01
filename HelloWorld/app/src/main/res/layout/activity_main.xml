@@ -10,6 +10,16 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
         android:text="@string/webview"
+        android:textAllCaps="false"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/button_go_filament"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="150dp"
+        android:text="@string/filament"
+        android:textAllCaps="false"
         android:textSize="12sp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
