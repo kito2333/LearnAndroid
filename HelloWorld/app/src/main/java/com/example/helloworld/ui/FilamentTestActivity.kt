@@ -61,19 +61,7 @@ class FilamentTestActivity : AppCompatActivity() {
 
     private fun initSurfaceView() {
         uiHelper = UiHelper(UiHelper.ContextErrorPolicy.DONT_CHECK)
-        uiHelper.renderCallback = object : UiHelper.RendererCallback {
-            override fun onNativeWindowChanged(surface: Surface?) {
-                Log.d(TAG, "onNativeWindowChanged")
-            }
-
-            override fun onDetachedFromSurface() {
-                Log.d(TAG, "onDetachedFromSurface")
-            }
-
-            override fun onResized(width: Int, height: Int) {
-                Log.d(TAG, "onResized w: $width, h $height")
-            }
-        }
+        uiHelper.renderCallback = SurfaceCallback()
 
         uiHelper.attachTo(surfaceView)
     }
@@ -83,7 +71,7 @@ class FilamentTestActivity : AppCompatActivity() {
         renderer = engine.createRenderer()
         scene = engine.createScene()
         view = engine.createView()
-        camera = engine.createCamera()
+        camera = engine.createCamera(engine.entityManager.create())
     }
 
     private fun initView() {
@@ -110,7 +98,7 @@ class FilamentTestActivity : AppCompatActivity() {
     }
 
     private fun loadMaterial() {
-        readUncompressAsset("materials/baked_color.filamat").let {
+        readUncompressAsset("baked_color.filamat").let {
             material = Material.Builder().payload(it, it.remaining()).build(engine)
         }
     }
@@ -240,10 +228,11 @@ class FilamentTestActivity : AppCompatActivity() {
         engine.destroyMaterial(material)
         engine.destroyView(view)
         engine.destroyScene(scene)
-        engine.destroyCamera(camera)
+        engine.destroyCameraComponent(camera.entity)
 
         val entityManager = EntityManager.get()
         entityManager.destroy(renderable)
+        entityManager.destroy(camera.entity)
 
         engine.destroy()
     }
@@ -263,13 +252,10 @@ class FilamentTestActivity : AppCompatActivity() {
 
 
     inner class SurfaceCallback : UiHelper.RendererCallback {
-        override fun onNativeWindowChanged(surface: Surface?) {
-            surface?.let {
-                Log.d(TAG, "onNativeWindowChanged")
-                swapChain?.let { chain -> engine.destroySwapChain(chain) }
-                swapChain = engine.createSwapChain(it, uiHelper.swapChainFlags)
-                displayHelper.attach(renderer, surfaceView.display)
-            }
+        override fun onNativeWindowChanged(surface: Surface) {
+            swapChain?.let { engine.destroySwapChain(it) }
+            swapChain = engine.createSwapChain(surface, uiHelper.swapChainFlags)
+            displayHelper.attach(renderer, surfaceView.display)
         }
 
         override fun onDetachedFromSurface() {
