@@ -15,7 +15,7 @@ open class FilamentLoader {
     lateinit var surfaceView: SurfaceView
     private val frameScheduler = FrameCallback()
     private lateinit var choreographer: Choreographer
-    protected val animator: ValueAnimator = ValueAnimator.ofFloat(0.0f, 360.0f)
+    protected val animator: ValueAnimator = getValueAnimator()
     protected lateinit var materialLoader: FilamentMaterialLoader
 
     // for filament
@@ -33,11 +33,12 @@ open class FilamentLoader {
 
     @Entity
     protected var renderable = 0
+
     @Entity
     protected var light = 0
     protected var swapChain: SwapChain? = null
 
-    private lateinit var context: Context
+    protected lateinit var context: Context
 
     fun init(context: Context) {
         this.context = context
@@ -67,14 +68,6 @@ open class FilamentLoader {
         camera = engine.createCamera(engine.entityManager.create())
     }
 
-    private fun initView() {
-        scene.skybox = Skybox.Builder().color(0.035f, 0.035f, 0.035f, 1.0f).build(engine)
-
-        view.camera = camera
-        view.scene = scene
-    }
-
-
     protected fun readUncompressAsset(assetName: String): ByteBuffer {
         context.assets.openFd(assetName).use {
             val input = it.createInputStream()
@@ -103,20 +96,32 @@ open class FilamentLoader {
         animator.cancel()
 
         uiHelper.detach()
+        destroyOthers()
         engine.destroyEntity(renderable)
+        engine.destroyEntity(light)
         engine.destroyRenderer(renderer)
-        engine.destroyVertexBuffer(vertexBuffer)
-        engine.destroyIndexBuffer(indexBuffer)
         engine.destroyView(view)
         engine.destroyScene(scene)
         engine.destroyCameraComponent(camera.entity)
-        destroyMaterial()
 
         val entityManager = EntityManager.get()
         entityManager.destroy(renderable)
+        entityManager.destroy(light)
         entityManager.destroy(camera.entity)
 
         engine.destroy()
+    }
+
+    open fun initView() {
+        // Tell the view which camera we want to use
+        view.camera = camera
+
+        // Tell the view which scene we want to render
+        view.scene = scene
+    }
+
+    open fun getValueAnimator(): ValueAnimator {
+        return ValueAnimator.ofFloat(0.0f, 360.0f)
     }
 
     open fun getSurfaceCallback(): UiHelper.RendererCallback {
@@ -131,15 +136,19 @@ open class FilamentLoader {
 
     open fun initScene() {}
 
-    open fun destroyMaterial() {
-        engine.destroyMaterial(material)
+    open fun destroyOthers() {
+
     }
 
     inner class FrameCallback : Choreographer.FrameCallback {
         override fun doFrame(frameTimeNanos: Long) {
+            // Schedule the next frame
             choreographer.postFrameCallback(this)
 
+            // This check guarantees that we have a swap chain
             if (uiHelper.isReadyToRender) {
+                // If beginFrame() returns false you should skip the frame
+                // This means you are sending frames too quickly to the GPU
                 if (renderer.beginFrame(swapChain!!, frameTimeNanos)) {
                     renderer.render(view)
                     renderer.endFrame()

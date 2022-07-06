@@ -10,6 +10,12 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class RectFilamentLoader : FilamentLoader() {
+
+    override fun initView() {
+        scene.skybox = Skybox.Builder().color(0.035f, 0.035f, 0.035f, 1.0f).build(engine)
+        super.initView()
+    }
+
     override fun initScene() {
         materialLoader = RectMaterialLoader()
         loadMaterial()
@@ -49,9 +55,11 @@ class RectFilamentLoader : FilamentLoader() {
         startAnimation()
     }
 
-    override fun destroyMaterial() {
+    override fun destroyOthers() {
         engine.destroyMaterialInstance(materialInstance)
-        super.destroyMaterial()
+        engine.destroyVertexBuffer(vertexBuffer)
+        engine.destroyIndexBuffer(indexBuffer)
+        engine.destroyMaterial(material)
     }
 
     override fun getSurfaceCallback(): UiHelper.RendererCallback {

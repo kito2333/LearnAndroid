@@ -15,6 +15,12 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 class TriangleFilamentLoader : FilamentLoader() {
+
+    override fun initView() {
+        scene.skybox = Skybox.Builder().color(0.035f, 0.035f, 0.035f, 1.0f).build(engine)
+        super.initView()
+    }
+
     override fun initScene() {
         materialLoader = TriangleMaterialLoader()
         loadMaterial()
@@ -61,6 +67,12 @@ class TriangleFilamentLoader : FilamentLoader() {
                 view.viewport = Viewport(0, 0, width, height)
             }
         }
+    }
+
+    override fun destroyOthers() {
+        engine.destroyVertexBuffer(vertexBuffer)
+        engine.destroyIndexBuffer(indexBuffer)
+        engine.destroyMaterial(material)
     }
 
     private fun loadMaterial() {
