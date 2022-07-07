@@ -54,7 +54,7 @@ class BaseLightingFilamentLoader : FilamentLoader() {
                 1.0f, 0.0f, 0.0f, 0.0f,
                 0.0f, 1.0f, 0.0f, 0.0f,
                 0.0f, 0.0f, 1.0f, 0.0f,
-                0.0f, -1.2f, 0.0f, 1.0f
+                0.0f, -100.0f, 0.0f, 1.0f
             )
         )
 
@@ -146,12 +146,12 @@ class BaseLightingFilamentLoader : FilamentLoader() {
     private fun startAnimation() {
         // Animate the triangle
         animator.interpolator = LinearInterpolator()
-        animator.duration = 18_000
+        animator.duration = 10_000
         animator.repeatMode = ValueAnimator.RESTART
         animator.repeatCount = ValueAnimator.INFINITE
         animator.addUpdateListener { a ->
             val v = (a.animatedValue as Float)
-            camera.lookAt(cos(v) * 4.5, 1.5, sin(v) * 4.5, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
+            camera.lookAt(cos(v) * 800.0, 0.0, sin(v) * 800.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0)
         }
         animator.start()
     }
