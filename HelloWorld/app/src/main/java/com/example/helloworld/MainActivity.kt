@@ -5,7 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
+import com.example.helloworld.ui.CustomDialog
 import com.example.helloworld.ui.FilamentTestActivity
+import com.example.helloworld.ui.FilamentTestActivity.Companion.BUNDLE_RENDER_TYPE
+import com.example.helloworld.ui.RadioButtonContent
 import com.example.helloworld.ui.WebViewActivity
 import com.google.android.filament.Filament
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,6 +19,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             Filament.init()
         }
     }
+
+    private lateinit var dialog: CustomDialog
 
     private val launcher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -29,6 +34,36 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_main)
         button_go_webview.setOnClickListener(this)
         button_go_filament.setOnClickListener(this)
+
+        initDialog()
+    }
+
+    private fun initDialog() {
+        dialog = CustomDialog(this, "Render Type").apply {
+            initRadioGroup(
+                RadioButtonContent(
+                    FilamentFactory.RenderType.TRIANGLE,
+                    R.id.render_type_triangle
+                ),
+                RadioButtonContent(
+                    FilamentFactory.RenderType.RECT,
+                    R.id.render_type_rect
+                ),
+                RadioButtonContent(
+                    FilamentFactory.RenderType.IBL,
+                    R.id.render_type_ibl
+                )
+            )
+            setConfirmListener {
+                if (this.isChecked()) {
+                    val renderType = getCheckedType()
+                    val intent = Intent(this@MainActivity, FilamentTestActivity::class.java)
+                    intent.putExtra(BUNDLE_RENDER_TYPE, renderType.text)
+                    launcher.launch(intent)
+                }
+                dialog.dismiss()
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -39,10 +74,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 launcher.launch(intent)
             }
             R.id.button_go_filament -> {
-                val intent = Intent(this, FilamentTestActivity::class.java)
-                intent.putExtra("test", "welcome to the 3D world")
-                launcher.launch(intent)
+                dialog.show()
             }
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (dialog.isShowing) {
+            dialog.dismiss()
         }
     }
 }

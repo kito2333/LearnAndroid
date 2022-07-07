@@ -6,15 +6,25 @@ import com.example.helloworld.loader.RectFilamentLoader
 import com.example.helloworld.loader.TriangleFilamentLoader
 
 object FilamentFactory {
-    enum class Type {
-        TRIANGLE, RECT, IBL
+    enum class RenderType(val text: String) {
+        TRIANGLE("TRIANGLE"), RECT("RECT"), IBL("IBL");
+
+        companion object {
+            fun fromString(text: String): RenderType {
+                return when (text) {
+                    "RECT" -> RECT
+                    "IBL" -> IBL
+                    else -> TRIANGLE
+                }
+            }
+        }
     }
 
-    fun createFilamentLoader(type: Type): FilamentLoader {
+    fun createFilamentLoader(type: RenderType): FilamentLoader {
         return when (type) {
-            Type.TRIANGLE -> TriangleFilamentLoader()
-            Type.RECT -> RectFilamentLoader()
-            Type.IBL -> BaseLightingFilamentLoader()
+            RenderType.TRIANGLE -> TriangleFilamentLoader()
+            RenderType.RECT -> RectFilamentLoader()
+            RenderType.IBL -> BaseLightingFilamentLoader()
         }
     }
 }

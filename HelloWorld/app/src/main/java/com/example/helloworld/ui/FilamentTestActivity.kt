@@ -4,17 +4,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.helloworld.FilamentFactory
 import com.example.helloworld.loader.FilamentLoader
-import com.example.helloworld.FilamentFactory.Type.*
+import com.example.helloworld.FilamentFactory.RenderType.*
 
 class FilamentTestActivity : AppCompatActivity() {
     companion object {
         const val TAG = "FilamentTestActivity"
+        const val BUNDLE_RENDER_TYPE = "renderType"
     }
 
-    private val loader: FilamentLoader = FilamentFactory.createFilamentLoader(IBL)
+    private lateinit var loader: FilamentLoader
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val renderType = intent.getStringExtra(BUNDLE_RENDER_TYPE) ?: ""
+
+        loader = FilamentFactory.createFilamentLoader(
+            FilamentFactory.RenderType.fromString(renderType)
+        )
+
         loader.init(this)
         setContentView(loader.surfaceView)
     }

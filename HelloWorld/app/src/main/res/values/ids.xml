@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="render_type_triangle" type="id" />
+    <item name="render_type_rect" type="id" />
+    <item name="render_type_ibl" type="id" />
+</resources>

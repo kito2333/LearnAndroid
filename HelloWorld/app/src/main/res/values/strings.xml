@@ -2,4 +2,7 @@
     <string name="app_name">HelloWorld</string>
     <string name="webview">WebView</string>
     <string name="filament">Filament</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="choose_render_model">Choose Render Model</string>
 </resources>
