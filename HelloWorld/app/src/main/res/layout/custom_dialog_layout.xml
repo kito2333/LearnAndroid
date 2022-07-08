@@ -22,7 +22,7 @@
         android:layout_height="1px"
         android:background="@color/gray" />
 
-    <RadioGroup
+    <com.example.helloworld.ui.CustomRadioGroup
         android:id="@+id/button_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
         android:orientation="horizontal"
         android:paddingVertical="10dp">
 
-    </RadioGroup>
+    </com.example.helloworld.ui.CustomRadioGroup>
 
     <View
         android:layout_width="match_parent"

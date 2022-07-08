@@ -3,4 +3,5 @@
     <item name="render_type_triangle" type="id" />
     <item name="render_type_rect" type="id" />
     <item name="render_type_ibl" type="id" />
+    <item name="render_type_ibt" type="id" />
 </resources>

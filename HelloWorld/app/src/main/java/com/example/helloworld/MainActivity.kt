@@ -52,6 +52,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 RadioButtonContent(
                     FilamentFactory.RenderType.IBL,
                     R.id.render_type_ibl
+                ),
+                RadioButtonContent(
+                    FilamentFactory.RenderType.IBT,
+                    R.id.render_type_ibt
                 )
             )
             setConfirmListener {

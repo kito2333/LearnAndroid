@@ -22,7 +22,6 @@ class TriangleFilamentLoader : FilamentLoader() {
     }
 
     override fun initScene() {
-        materialLoader = TriangleMaterialLoader()
         loadMaterial()
         createMesh()
 
@@ -76,7 +75,7 @@ class TriangleFilamentLoader : FilamentLoader() {
     }
 
     private fun loadMaterial() {
-        readUncompressAsset(TriangleMaterialLoader().getResource()).let {
+        readUncompressAsset("materials/baked_color.filamat").let {
             material = Material.Builder().payload(it, it.remaining()).build(engine)
         }
     }

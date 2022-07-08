@@ -17,7 +17,6 @@ class RectFilamentLoader : FilamentLoader() {
     }
 
     override fun initScene() {
-        materialLoader = RectMaterialLoader()
         loadMaterial()
         initMaterial()
         createMesh()
@@ -92,7 +91,7 @@ class RectFilamentLoader : FilamentLoader() {
     }
 
     private fun loadMaterial() {
-        readUncompressAsset(materialLoader.getResource()).let {
+        readUncompressAsset("materials/lit.filamat").let {
             material = Material.Builder().payload(it, it.remaining()).build(engine)
         }
     }

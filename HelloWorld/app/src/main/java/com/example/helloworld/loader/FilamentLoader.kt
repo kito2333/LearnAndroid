@@ -16,7 +16,6 @@ open class FilamentLoader {
     private val frameScheduler = FrameCallback()
     private lateinit var choreographer: Choreographer
     protected val animator: ValueAnimator = getValueAnimator()
-    protected lateinit var materialLoader: FilamentMaterialLoader
 
     // for filament
     protected lateinit var uiHelper: UiHelper
