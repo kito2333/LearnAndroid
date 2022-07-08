@@ -5,18 +5,16 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.result.contract.ActivityResultContracts
-import com.example.helloworld.ui.CustomDialog
-import com.example.helloworld.ui.FilamentTestActivity
+import com.example.helloworld.ui.*
 import com.example.helloworld.ui.FilamentTestActivity.Companion.BUNDLE_RENDER_TYPE
-import com.example.helloworld.ui.RadioButtonContent
-import com.example.helloworld.ui.WebViewActivity
 import com.google.android.filament.Filament
+import com.google.android.filament.utils.Utils
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
         init {
-            Filament.init()
+            Utils.init()
         }
     }
 
@@ -34,7 +32,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_main)
         button_go_webview.setOnClickListener(this)
         button_go_filament.setOnClickListener(this)
-
+        button_go_gltf.setOnClickListener(this)
         initDialog()
     }
 
@@ -79,6 +77,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.button_go_filament -> {
                 dialog.show()
+            }
+            R.id.button_go_gltf -> {
+                val intent = Intent(this, GLTFActivity::class.java)
+                launcher.launch(intent)
             }
         }
     }

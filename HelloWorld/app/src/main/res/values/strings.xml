@@ -5,4 +5,6 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="choose_render_model">Choose Render Model</string>
+    <string name="filament_remote">https://google.github.io/filament/remote</string>
+    <string name="gltf">GLTF</string>
 </resources>

@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.GLTFActivity"
+            android:exported="true" />
+        <activity
             android:name=".ui.FilamentTestActivity"
             android:exported="true" />
         <activity

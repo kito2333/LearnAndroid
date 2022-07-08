@@ -65,6 +65,7 @@ class CustomRadioGroup : RadioGroup {
             val child = getChildAt(i)
             val lp = child.layoutParams as MarginLayoutParams
             if (preLeft + lp.leftMargin + child.measuredWidth + lp.rightMargin + paddingRight > (r - l)) {
+                // 换行
                 preLeft = paddingLeft
                 preTop += maxHeight
                 maxHeight = child.measuredHeight + lp.topMargin + lp.bottomMargin
