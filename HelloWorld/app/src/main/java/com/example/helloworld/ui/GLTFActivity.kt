@@ -1,6 +1,11 @@
 package com.example.helloworld.ui
 
 import android.annotation.SuppressLint
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.opengl.Matrix
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -36,6 +41,7 @@ class GLTFActivity : AppCompatActivity() {
     private val frameScheduler = FrameCallback()
     private lateinit var modelViewer: ModelViewer
     private lateinit var titleBarHint: TextView
+    private lateinit var sensorParamText: TextView
     private val doubleTapListener = DoubleTapListener()
     private lateinit var doubleTapDetector: GestureDetector
     private var remoteServer: RemoteServer? = null
@@ -47,11 +53,66 @@ class GLTFActivity : AppCompatActivity() {
     private var loadStartFence: Fence? = null
     private val viewerContent = AutomationEngine.ViewerContent()
 
+    private var sensor: Sensor? = null
+    private var sensorAvailable: Boolean = false
+    private var sensorFirstGet: Boolean = false
+    private var sensorRotationMatrix: FloatArray = FloatArray(0)
+    private lateinit var sensorManager: SensorManager
+    private val sensorListener: SensorEventListener = object : SensorEventListener {
+        override fun onSensorChanged(event: SensorEvent?) {
+            if (event?.values != null) {
+                val rotationMatrix = FloatArray(16)
+                SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
+                if (!sensorFirstGet) {
+                    Log.d(TAG, "fckAll init succeed $rotationMatrix")
+                    sensorFirstGet = true
+                    sensorRotationMatrix = FloatArray(16) {
+                        rotationMatrix[it]
+                    }
+                }
+
+                val orientations = FloatArray(3)
+                SensorManager.getOrientation(rotationMatrix, orientations)
+                for (i in 0 until 3) {
+                    orientations[i] = Math.toDegrees(orientations[i].toDouble()).toFloat()
+                }
+                sensorParamText.text = resources.getString(
+                    R.string.sensor_param,
+                    orientations[1],
+                    orientations[2],
+                    orientations[0]
+                )
+
+                val finalMatrix = FloatArray(16)
+                modelViewer.asset?.let { asset ->
+                    val tm = modelViewer.engine.transformManager
+                    if (Matrix.invertM(rotationMatrix, 0, rotationMatrix, 0)) {
+                        Matrix.multiplyMM(
+                            finalMatrix,
+                            0,
+                            sensorRotationMatrix,
+                            0,
+                            rotationMatrix,
+                            0
+                        )
+                        finalMatrix[14] = -400.0f
+                        tm.setTransform(tm.getInstance(asset.root), finalMatrix)
+                    }
+                }
+            }
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gltf)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        initSensor()
 
         titleBarHint = findViewById(R.id.user_hint)
         surfaceView = findViewById(R.id.main_sv)
@@ -301,11 +362,13 @@ class GLTFActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         choreographer.postFrameCallback(frameScheduler)
+        registerSensorListener(true)
     }
 
     override fun onPause() {
         super.onPause()
         choreographer.removeFrameCallback(frameScheduler)
+        registerSensorListener(false)
     }
 
     override fun onDestroy() {
@@ -404,6 +467,28 @@ class GLTFActivity : AppCompatActivity() {
             modelViewer.destroyModel()
             createDefaultRenderables()
             return super.onDoubleTap(e)
+        }
+    }
+
+    private fun initSensor() {
+        sensorParamText = findViewById(R.id.sensor_param)
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR) ?: return
+        sensorAvailable = true
+        Log.d(TAG, "sensor init succeed")
+    }
+
+    private fun registerSensorListener(register: Boolean) {
+        if (sensorAvailable) {
+            if (register) {
+                sensorManager.registerListener(
+                    sensorListener,
+                    sensor,
+                    SensorManager.SENSOR_DELAY_NORMAL
+                )
+            } else {
+                sensorManager.unregisterListener(sensorListener, sensor)
+            }
         }
     }
 }

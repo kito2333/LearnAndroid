@@ -7,4 +7,5 @@
     <string name="choose_render_model">Choose Render Model</string>
     <string name="filament_remote">https://google.github.io/filament/remote</string>
     <string name="gltf">GLTF</string>
+    <string name="sensor_param">旋转角度\nAxis\u3000X:\u3000%1$f\nAxis\u3000Y:\u3000%2$f\nAxis\u3000Z:\u3000%3$f</string>
 </resources>
