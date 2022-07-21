@@ -20,11 +20,12 @@ import okhttp3.Request
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.await
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
+import kotlin.Exception
 import kotlin.concurrent.thread
 import kotlin.text.StringBuilder
 
@@ -60,6 +61,15 @@ class WebViewActivity : AppCompatActivity() {
                     t.printStackTrace()
                 }
             })
+        }
+    }
+
+    suspend fun getAppData() {
+        try {
+            // 协程简化版本
+            val appList = HttpUtil.create<AppService>().getAppData().await()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

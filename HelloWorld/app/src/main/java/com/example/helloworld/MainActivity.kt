@@ -6,7 +6,10 @@ import android.hardware.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.example.helloworld.ui.*
 import com.example.helloworld.ui.FilamentTestActivity.Companion.BUNDLE_RENDER_TYPE
@@ -122,7 +125,31 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         button_go_filament.setOnClickListener(this)
         button_go_gltf.setOnClickListener(this)
         initDialog()
+        setSupportActionBar(toolbar)
 //        initSensor()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.toolbar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            // Toolbar 只显示图片, Menu 只显示文字
+            R.id.backup -> {
+                Toast.makeText(this, null, Toast.LENGTH_SHORT).apply {
+                    setText("You clicked Backup")   // fix小米toast带app前缀问题
+                }.show()
+            }
+            R.id.delete -> {
+                Toast.makeText(this, "You clicked Delete", Toast.LENGTH_SHORT).show()
+            }
+            R.id.settings -> {
+                Toast.makeText(this, "You clicked Settings", Toast.LENGTH_SHORT).show()
+            }
+        }
+        return true
     }
 
     private fun initDialog() {
