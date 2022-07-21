@@ -11,6 +11,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.GravityCompat
 import com.example.helloworld.ui.*
 import com.example.helloworld.ui.FilamentTestActivity.Companion.BUNDLE_RENDER_TYPE
 import com.google.android.filament.utils.Utils
@@ -126,6 +127,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         button_go_gltf.setOnClickListener(this)
         initDialog()
         setSupportActionBar(toolbar)
+        supportActionBar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setHomeAsUpIndicator(R.drawable.ic_menu)
+        }
+        navView.setCheckedItem(R.id.navCall)
+        navView.setNavigationItemSelectedListener {
+            drawerLayout.closeDrawers()
+            true
+        }
 //        initSensor()
     }
 
@@ -147,6 +157,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.settings -> {
                 Toast.makeText(this, "You clicked Settings", Toast.LENGTH_SHORT).show()
+            }
+            android.R.id.home -> {
+                drawerLayout.openDrawer(GravityCompat.START)
             }
         }
         return true
