@@ -15,6 +15,7 @@ import androidx.core.view.GravityCompat
 import com.example.helloworld.ui.*
 import com.example.helloworld.ui.FilamentTestActivity.Companion.BUNDLE_RENDER_TYPE
 import com.google.android.filament.utils.Utils
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
@@ -125,6 +126,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         button_go_webview.setOnClickListener(this)
         button_go_filament.setOnClickListener(this)
         button_go_gltf.setOnClickListener(this)
+        fab.setOnClickListener(this)
         initDialog()
         setSupportActionBar(toolbar)
         supportActionBar?.let {
@@ -219,6 +221,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.button_go_gltf -> {
                 val intent = Intent(this, GLTFActivity::class.java)
                 launcher.launch(intent)
+            }
+            R.id.fab -> {
+                Snackbar.make(v, "Data Deleted", Snackbar.LENGTH_SHORT)
+                    .setAction("Undo") {
+                        Toast.makeText(this, "Data restored", Toast.LENGTH_SHORT).show()
+                    }.show()
             }
         }
     }
