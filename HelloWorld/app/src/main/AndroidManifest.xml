@@ -20,6 +20,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppThemeNoActionBar">
         <activity
+            android:name=".ui.FruitActivity"
+            android:theme="@style/FruitActivityTheme"
+            android:exported="true" />
+        <activity
             android:name=".ui.GLTFActivity"
             android:exported="true" />
         <activity

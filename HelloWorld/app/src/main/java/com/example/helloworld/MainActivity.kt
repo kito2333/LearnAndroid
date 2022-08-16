@@ -1,5 +1,6 @@
 package com.example.helloworld
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.hardware.*
@@ -12,11 +13,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.GravityCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import com.example.helloworld.data.Fruit
 import com.example.helloworld.ui.*
 import com.example.helloworld.ui.FilamentTestActivity.Companion.BUNDLE_RENDER_TYPE
 import com.google.android.filament.utils.Utils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
@@ -123,6 +127,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+//        initSensor()
+        initViews()
+    }
+
+    private fun initViews() {
         button_go_webview.setOnClickListener(this)
         button_go_filament.setOnClickListener(this)
         button_go_gltf.setOnClickListener(this)
@@ -138,7 +147,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             drawerLayout.closeDrawers()
             true
         }
-//        initSensor()
+
+        initFruits()
+        swipeRefresh.setColorSchemeResources(R.color.colorPrimary)
+        swipeRefresh.setOnRefreshListener {
+            refreshFruits(recyclerView.adapter as FruitAdapter)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -262,6 +276,46 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 rotationVectorSensor,
                 SensorManager.SENSOR_DELAY_NORMAL
             )
+        }
+    }
+
+    private val fruits = mutableListOf(
+        Fruit("Apple", R.drawable.apple),
+        Fruit("Banana", R.drawable.banana),
+        Fruit("Orange", R.drawable.orange),
+        Fruit("Banana", R.drawable.banana),
+        Fruit("Watermelon", R.drawable.watermelon),
+        Fruit("Pear", R.drawable.pear),
+        Fruit("Grape", R.drawable.grape),
+        Fruit("Pineapple", R.drawable.pineapple),
+        Fruit("Strawberry", R.drawable.strawberry),
+        Fruit("Cherry", R.drawable.cherry),
+        Fruit("Mango", R.drawable.mango),
+    )
+
+    private val fruitList = ArrayList<Fruit>()
+
+    private fun initFruits() {
+        fruitList.clear()
+        repeat(50) {
+            val index = (0 until fruits.size).random()
+            fruitList.add(fruits[index])
+        }
+
+        val layoutManager = GridLayoutManager(this, 2)
+        recyclerView.layoutManager = layoutManager
+        recyclerView.adapter = FruitAdapter(this, fruitList)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun refreshFruits(adapter: FruitAdapter) {
+        thread {
+            Thread.sleep(2000)
+            runOnUiThread {
+                initFruits()
+                adapter.notifyDataSetChanged()
+                swipeRefresh.isRefreshing = false
+            }
         }
     }
 }
