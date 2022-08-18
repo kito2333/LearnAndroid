@@ -13,8 +13,10 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.helloworld.data.Fruit
+import com.example.helloworld.data.MainViewModel
 import com.example.helloworld.ui.*
 import com.example.helloworld.ui.FilamentTestActivity.Companion.BUNDLE_RENDER_TYPE
 import com.google.android.filament.utils.Utils
@@ -33,6 +35,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var dialog: CustomDialog
     private lateinit var sensorManager: SensorManager
+    private lateinit var viewModel: MainViewModel
     private var proximitySensor: Sensor? = null
     private var gyroscopeSensor: Sensor? = null
     private var rotationVectorSensor: Sensor? = null
@@ -127,6 +130,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
 //        initSensor()
         initViews()
     }
@@ -153,6 +157,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         swipeRefresh.setOnRefreshListener {
             refreshFruits(recyclerView.adapter as FruitAdapter)
         }
+
+        button_plus_one.setOnClickListener {
+            viewModel.counter++
+            refreshCounter()
+        }
+    }
+
+    private fun refreshCounter() {
+        counter.text = viewModel.counter.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
