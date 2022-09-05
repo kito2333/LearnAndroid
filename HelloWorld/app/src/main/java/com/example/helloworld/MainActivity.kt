@@ -1,7 +1,9 @@
 package com.example.helloworld
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.hardware.*
 import androidx.appcompat.app.AppCompatActivity
@@ -12,13 +14,17 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.helloworld.data.Fruit
+import com.example.helloworld.data.MainLiveData
 import com.example.helloworld.data.MainViewModel
+import com.example.helloworld.lifecycle.MyObserver
 import com.example.helloworld.ui.*
 import com.example.helloworld.ui.FilamentTestActivity.Companion.BUNDLE_RENDER_TYPE
+import com.example.helloworld.utils.MainViewModelFactory
 import com.google.android.filament.utils.Utils
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -27,6 +33,7 @@ import kotlin.concurrent.thread
 class MainActivity : AppCompatActivity(), View.OnClickListener {
     companion object {
         const val TAG = "MainActivity"
+        const val PREF_COUNT_RESERVED = "count_reserved"
 
         init {
             Utils.init()
@@ -36,6 +43,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var dialog: CustomDialog
     private lateinit var sensorManager: SensorManager
     private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel2: MainLiveData
+    private lateinit var sp: SharedPreferences
+
     private var proximitySensor: Sensor? = null
     private var gyroscopeSensor: Sensor? = null
     private var rotationVectorSensor: Sensor? = null
@@ -130,9 +140,15 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        sp = getPreferences(Context.MODE_PRIVATE)
+        val countReserved = sp.getInt(PREF_COUNT_RESERVED, 0)
+        viewModel2 = ViewModelProvider(
+            this,
+            MainViewModelFactory(countReserved)
+        ).get(MainLiveData::class.java)
 //        initSensor()
         initViews()
+        lifecycle.addObserver(MyObserver(lifecycle))
     }
 
     private fun initViews() {
@@ -158,9 +174,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             refreshFruits(recyclerView.adapter as FruitAdapter)
         }
 
+        button_clear.setOnClickListener {
+//            viewModel.counter = 0
+//            refreshCounter()
+            viewModel2.clear()
+        }
         button_plus_one.setOnClickListener {
-            viewModel.counter++
-            refreshCounter()
+//            viewModel.counter++
+//            refreshCounter()
+            viewModel2.plusOne()
+        }
+//        refreshCounter()
+        viewModel2.counter.observe(this) { count ->
+            counter.text = count.toString()
+        }
+
+        button_get_fruit.setOnClickListener {
+            val fruitId = (0..10000).random().toString()
+            viewModel2.getFruit(fruitId)
+        }
+
+        viewModel2.fruit.observe(this) {
+            counter.text = it.name
         }
     }
 
@@ -262,6 +297,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onPause()
         if (dialog.isShowing) {
             dialog.dismiss()
+        }
+
+        sp.edit {
+            putInt(PREF_COUNT_RESERVED, viewModel2.counter.value ?: 0)
         }
 
         if (sensorAvailable) {

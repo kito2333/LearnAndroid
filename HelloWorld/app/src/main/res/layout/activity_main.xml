@@ -80,6 +80,22 @@
                     android:textSize="30sp" />
             </LinearLayout>
 
+            <Button
+                android:id="@+id/button_clear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/clear"
+                android:textSize="12sp" />
+
+            <Button
+                android:id="@+id/button_get_fruit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/fruit"
+                android:textSize="12sp" />
+
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/swipeRefresh"
                 android:layout_width="match_parent"
